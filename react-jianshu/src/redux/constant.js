@@ -1,0 +1,3 @@
+export const SEARCH_FOCUS = 'HOME/SEARCH_FOCUS'
+export const SEARCH_BLUR = 'HOME/SEARCH_BLUR'
+export const CHANGE_LIST = 'HOME/CHANGE_LIST'
