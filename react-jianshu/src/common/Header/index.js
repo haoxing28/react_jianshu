@@ -6,23 +6,34 @@ import { HeaderWrapper, Logo, Nav,
          Button, SearchWrapper, SearchInfo,
          SearchInfoSwitch, SearchInfoTitle,
          SearchInfoItem, SearchInfoList } from './style'
-import {handleInputFocus, handleInputBlur, getList} from '../../redux/actions/header'
+import {handleInputFocus, handleInputBlur, 
+    getList, handleMouseEnter,handleMouseLeave, handleChangePage} from '../../redux/actions/header'
 
 class Header extends Component {
     getListArea = () => {
-        if(this.props.focused){
+        const { focused, list, mouseIn, page, totalPage, 
+            handleMouseEnter, handleMouseLeave, handleChangePage } = this.props
+        const newList = list.toJS();
+        const pageList = []
+        if(newList.length) {
+            for (let i = (page - 1) * 10; i < page * 10; i++){
+            pageList.push(
+                <SearchInfoItem key={newList[i]}>{newList[i]}</SearchInfoItem>
+            )
+        }
+        }
+        if(focused || mouseIn){
             return (<SearchInfo>
-                                <SearchInfoTitle>Top
-                                    <SearchInfoSwitch>
+                                <SearchInfoTitle 
+                                onMouseEnter={handleMouseEnter}
+                                onMouseLeave={handleMouseLeave}>Top
+                                    <SearchInfoSwitch onClick={() => handleChangePage(page, totalPage, this.spinIcon)}>
+                                        <i ref={(icon) => {this.spinIcon = icon}} className="iconfont spin">&#xe851;</i>
                                         Change
                                     </SearchInfoSwitch>
                                 </SearchInfoTitle>
                                 <SearchInfoList>
-                                    {
-                                        this.props.list.map((item)=>{
-                                            return <SearchInfoItem key={item}>{item}</SearchInfoItem>
-                                        })
-                                    }
+                                    {pageList}
                                 </SearchInfoList>
                             </SearchInfo>)
             } else{
@@ -30,6 +41,7 @@ class Header extends Component {
             }
         }
     render() {
+        const { focused, handleInputBlur, getList, list} = this.props
         return (
             <HeaderWrapper>
                 <Logo href='/'/>
@@ -42,14 +54,14 @@ class Header extends Component {
                     </NavItem>
                     <SearchWrapper>
                         <CSSTransition
-                        in={this.props.focused}
+                        in={focused}
                         timeout={200}
                         classNames='slide'>
-                        <NavSearch className={this.props.focused? 'focused' : ''} 
-                        onFocus={this.props.getList}
-                        onBlur={this.props.handleInputBlur}/>
+                        <NavSearch className={focused? 'focused' : ''} 
+                        onFocus={()=>getList(list)}
+                        onBlur={handleInputBlur}/>
                         </CSSTransition>
-                        <i className={this.props.focused? 'focused iconfont' : 'iconfont'}>&#xe614;</i>
+                        <i className={focused? 'focused iconfont zoom' : 'iconfont zoom'}>&#xe614;</i>
                         {this.getListArea()}
                     </SearchWrapper>
                     <Addition>
@@ -91,7 +103,10 @@ export default connect(
     state => ({
         // focused: state.getIn(['headerReducer','focused'])
         focused: state.get('headerReducer').get('focused'),
-        list: state.get('headerReducer').get('list')
+        list: state.get('headerReducer').get('list'),
+        page: state.get('headerReducer').get('page'),
+        totalPage: state.get('headerReducer').get('totalPage'),
+        mouseIn: state.get('headerReducer').get('mouseIn')
     }),
-    {handleInputFocus,handleInputBlur,getList}
+    {handleInputFocus,handleInputBlur,getList,handleMouseEnter,handleMouseLeave,handleChangePage}
 )(Header)

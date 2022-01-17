@@ -1,3 +1,6 @@
 export const SEARCH_FOCUS = 'HOME/SEARCH_FOCUS'
 export const SEARCH_BLUR = 'HOME/SEARCH_BLUR'
 export const CHANGE_LIST = 'HOME/CHANGE_LIST'
+export const MOUSE_ENTER = 'HOME/MOUSE_ENTER'
+export const MOUSE_LEAVE = 'HOME/MOUSE_LEAVE'
+export const CHANGE_PAGE = 'HOME/CHANGE_PAGE'
