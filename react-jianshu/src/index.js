@@ -5,13 +5,14 @@ import './style'
 import App from './App';
 import './statics/iconfont/iconfont'
 import { GlobalStyleFont } from './statics/iconfont/iconfont'
+import { BrowserRouter } from 'react-router-dom'
 
 
 ReactDOM.render(
-  <div>
+  <BrowserRouter>
     <GlobalStyle/>
     <GlobalStyleFont/>
     <App />
-  </div>,
+  </BrowserRouter>,
   document.getElementById('root')
 );
