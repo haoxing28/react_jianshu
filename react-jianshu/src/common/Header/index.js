@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import { CSSTransition } from 'react-transition-group'
+import {Link} from 'react-router-dom'
 import { HeaderWrapper, Logo, Nav, 
          NavItem, NavSearch, Addition,
          Button, SearchWrapper, SearchInfo,
          SearchInfoSwitch, SearchInfoTitle,
          SearchInfoItem, SearchInfoList } from './style'
 import {handleInputFocus, handleInputBlur, 
-    getList, handleMouseEnter,handleMouseLeave, handleChangePage} from '../../redux/actions/header'
+    getList, handleMouseEnter,handleMouseLeave, handleChangePage, logout} from '../../redux/actions/header'
 
 class Header extends Component {
     getListArea = () => {
         const { focused, list, mouseIn, page, totalPage, 
-            handleMouseEnter, handleMouseLeave, handleChangePage } = this.props
+            handleMouseEnter, handleMouseLeave, handleChangePage} = this.props
         const newList = list.toJS();
         const pageList = []
         if(newList.length) {
@@ -41,14 +42,21 @@ class Header extends Component {
             }
         }
     render() {
-        const { focused, handleInputBlur, getList, list} = this.props
+        const { focused, handleInputBlur, getList, list, login } = this.props
         return (
             <HeaderWrapper>
-                <Logo href='/'/>
+                <Link to='/'>
+                    <Logo/>
+                </Link>
                 <Nav>
                     <NavItem className='left active'>Home</NavItem>
                     <NavItem className='left'>Download</NavItem>
-                    <NavItem className='right'>Login</NavItem>
+                    {
+                        login? <NavItem className='right' onClick={this.props.logout}>Logout</NavItem> : 
+                        <Link to='/login'>
+                            <NavItem className='right'>Login</NavItem>
+                        </Link>
+                    }
                     <NavItem className='right'>
                         <i className='iconfont'>&#xe636;</i>
                     </NavItem>
@@ -65,10 +73,12 @@ class Header extends Component {
                         {this.getListArea()}
                     </SearchWrapper>
                     <Addition>
-                        <Button className='writing'>
-                            <i className='iconfont'>&#xe615;</i>
-                            Write Article</Button>
-                        <Button className='reg'>Register</Button>
+                        <Link to='/write'>
+                            <Button className='writing'>
+                                <i className='iconfont'>&#xe615;</i>
+                                Write Article</Button>
+                            <Button className='reg'>Register</Button>
+                        </Link>
                     </Addition>
                 </Nav>
             </HeaderWrapper>
@@ -106,7 +116,8 @@ export default connect(
         list: state.get('headerReducer').get('list'),
         page: state.get('headerReducer').get('page'),
         totalPage: state.get('headerReducer').get('totalPage'),
-        mouseIn: state.get('headerReducer').get('mouseIn')
+        mouseIn: state.get('headerReducer').get('mouseIn'),
+        login: state.get('loginReducer').get('login')
     }),
-    {handleInputFocus,handleInputBlur,getList,handleMouseEnter,handleMouseLeave,handleChangePage}
+    {handleInputFocus,handleInputBlur,getList,handleMouseEnter,handleMouseLeave,handleChangePage,logout}
 )(Header)

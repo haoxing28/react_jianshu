@@ -2,6 +2,7 @@ import {SEARCH_FOCUS, SEARCH_BLUR,
     CHANGE_LIST, MOUSE_ENTER, MOUSE_LEAVE, CHANGE_PAGE} from '../constant'
 import axios from 'axios'
 import { fromJS } from 'immutable'
+import {logoutAction} from './login'
 
 const changeList = (data) => ({
     type: CHANGE_LIST,
@@ -12,6 +13,12 @@ const changeList = (data) => ({
 export const handleInputFocus = () => ({
     type: SEARCH_FOCUS
 })
+
+export const logout = () => {
+    return (dispatch) => {
+        dispatch(logoutAction())
+    }
+}
 
 export const handleChangePage = (page, totalPage, spin) => {
     let originAngle = spin.style.transform.replace(/[^0-9]/ig, '');

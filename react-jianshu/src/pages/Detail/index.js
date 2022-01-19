@@ -1,12 +1,29 @@
-import React, { Component } from 'react'
-import {} from './style'
+import React, { PureComponent } from 'react'
+import {DetailWrapper, Header, Content} from './style'
+import {connect} from 'react-redux'
+import { getDetailInfo } from '../../redux/actions/detail'
 
-export default class Detail extends Component {
+class Detail extends PureComponent {
     render() {
+        const {title, content} = this.props
         return (
-            <div>
-                Detail
-            </div>
+            <DetailWrapper>
+                <Header>{title}</Header>
+                <Content dangerouslySetInnerHTML={{__html: content}}/>
+            </DetailWrapper>
         )
     }
+
+    componentDidMount() {
+        this.props.getDetailInfo();
+    }
 }
+
+export default connect(
+    state => ({
+        title: state.get('detailReducer').get('title'),
+        content: state.get('detailReducer').get('content')
+    }),
+    {getDetailInfo}
+)(Detail)
+
